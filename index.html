@@ -1,0 +1,41 @@
+<!doctype html>
+<html>
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Slot Loader Example</title>
+    <script type="application/javascript" src="https://int-games.virtustec.com/spinmatic-slot-loader/loader.js"></script>
+    <script>
+      const getSqSlotLoaderConfig = async () => {
+        const params = new URLSearchParams(document.location.search);
+        const playlistId = params.get('playlistId') || '72407';
+        const language = params.get('language') || 'en';
+        const onlineHash = params.get('onlineHash') || 'c99ab6e0c73e4f119768e0d75ca3495d';
+
+        return {
+          serverUrl: 'wss://int-proxy.virtustec.com',
+          spServerUrl: 'wss://int-spinmatic.virtustec.com',
+          spConfiguratorUrl: 'https://c.spinmatic.org/game-configs-gr/prod',
+          playlistId: playlistId,
+          onlineHash: onlineHash,
+          externalSpConfig: {
+            language: language,
+            lobbyUrl: 'https://softquo.com/',
+          },
+        };
+      };
+
+      (async () => {
+        try {
+          const config = await getSqSlotLoaderConfig();
+          const loader = new sqSlotLoader.SqSlotLoader(config);
+          await loader.init();
+          console.log('SlotLoader loaded with config:', config);
+        } catch (error) {
+          console.error(error);
+        }
+      })();
+    </script>
+  </head>
+  <body>
+  </body>
+</html>
