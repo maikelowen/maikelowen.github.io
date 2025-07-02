@@ -1,20 +1,57 @@
-const getSqSlotLoaderConfig = async () => {
-  let envPropertiesParams = await getSlotLoaderConfigFronEnvProperties('./env.properties.json');
-  const params = new URLSearchParams(document.location.search);
-  
-  // Si existe playlistId en la URL, úsalo; si no, usa el por defecto
-  const playlistId = params.get('playlistId') || '72407';
-  const language = params.get('language') || 'en';
+<!doctype html>
+<html>
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Slot Loader Example</title>
+    <script type="application/javascript" src="https://int-games.virtustec.com/spinmatic-slot-loader/loader.js"></script>
+    <script>
+      const getSlotLoaderConfigFronEnvProperties = async (envUrl) => {
+        try {
+          const response = await fetch(envUrl);
+          if (!response.ok) {
+            throw new Error(`Response status: ${response.status}`);
+          }
+          return await response.json();
+        } catch (error) {
+          return;
+        }
+      };
 
-  return {
-    serverUrl: 'wss://int-proxy.virtustec.com',
-    spServerUrl: 'wss://int-spinmatic.virtustec.com',
-    spConfiguratorUrl: 'https://c.spinmatic.org/game-configs-gr/prod',
-    playlistId: playlistId,
-    onlineHash: 'c99ab6e0c73e4f119768e0d75ca3495d',
-    externalSpConfig: {
-      language: language,
-      lobbyUrl: 'https://softquo.com/',
-    },
-  };
-};
+      const getSqSlotLoaderConfig = async () => {
+        // Si tienes un JSON de propiedades, lo puedes usar
+        let envPropertiesParams = await getSlotLoaderConfigFronEnvProperties('./env.properties.json');
+
+        const params = new URLSearchParams(document.location.search);
+        // Toma playlistId y language de la URL si existen
+        const playlistId = params.get('playlistId') || '72407';
+        const language = params.get('onlineHash');
+
+        return {
+          serverUrl: 'wss://int-proxy.virtustec.com',
+          spServerUrl: 'wss://int-spinmatic.virtustec.com',
+          spConfiguratorUrl: 'https://c.spinmatic.org/game-configs-gr/prod',
+          playlistId: playlistId,
+          onlineHash: onlineHash,
+          externalSpConfig: {
+            language: en,
+            lobbyUrl: 'https://softquo.com/',
+          },
+        };
+      };
+
+      (async () => {
+        try {
+          const config = await getSqSlotLoaderConfig();
+          const loader = new sqSlotLoader.SqSlotLoader(config);
+          await loader.init();
+          console.log('--------> IIFE SlotLoader LOADED!');
+        } catch (error) {
+          console.error(error);
+        }
+      })();
+    </script>
+  </head>
+  <body>
+  </body>
+</html>
+
