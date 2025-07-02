@@ -1,0 +1,20 @@
+const getSqSlotLoaderConfig = async () => {
+  let envPropertiesParams = await getSlotLoaderConfigFronEnvProperties('./env.properties.json');
+  const params = new URLSearchParams(document.location.search);
+  
+  // Si existe playlistId en la URL, úsalo; si no, usa el por defecto
+  const playlistId = params.get('playlistId') || '72407';
+  const language = params.get('language') || 'en';
+
+  return {
+    serverUrl: 'wss://int-proxy.virtustec.com',
+    spServerUrl: 'wss://int-spinmatic.virtustec.com',
+    spConfiguratorUrl: 'https://c.spinmatic.org/game-configs-gr/prod',
+    playlistId: playlistId,
+    onlineHash: 'c99ab6e0c73e4f119768e0d75ca3495d',
+    externalSpConfig: {
+      language: language,
+      lobbyUrl: 'https://softquo.com/',
+    },
+  };
+};
